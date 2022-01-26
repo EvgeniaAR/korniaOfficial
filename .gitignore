@@ -17,5 +17,6 @@ kornia.egg-info/
 .mypy_cache/*
 .coverage
 *bak
+*.ipynb
 *ipynb_checkpoints*
 docs/source/_static/*jpg

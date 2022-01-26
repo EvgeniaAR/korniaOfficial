@@ -83,7 +83,7 @@ class ColorJitter(IntensityAugmentationBase2D):
         self, input: torch.Tensor, params: Dict[str, torch.Tensor], transform: Optional[torch.Tensor] = None
     ) -> torch.Tensor:
         transforms = [
-            lambda img: adjust_brightness(img, params["brightness_factor"] - 1),
+            lambda img: adjust_brightness(img, params["brightness_factor"]),
             lambda img: adjust_contrast(img, params["contrast_factor"]),
             lambda img: adjust_saturation(img, params["saturation_factor"]),
             lambda img: adjust_hue(img, params["hue_factor"] * 2 * pi),

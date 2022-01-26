@@ -4,6 +4,7 @@ from typing import Optional, Union
 import torch
 import torch.nn as nn
 
+from kornia.color.gray import rgb_to_grayscale
 from kornia.color.hsv import hsv_to_rgb, rgb_to_hsv
 from kornia.utils.helpers import _torch_histc_cast
 from kornia.utils.image import perform_keep_shape_image, perform_keep_shape_video
@@ -293,8 +294,13 @@ def adjust_contrast(input: torch.Tensor, contrast_factor: Union[float, torch.Ten
     for _ in range(len(input.shape) - len(contrast_factor.shape)):
         contrast_factor = torch.unsqueeze(contrast_factor, dim=-1)
 
+    mean = rgb_to_grayscale(input).mean(dim=2).mean(dim=2)
+    mean_image = mean[:, :, None, None].repeat(1, 3, input.size(2), input.size(3))
+
+    x_other = torch.zeros_like(input) + mean_image 
+        
     # Apply contrast factor to each channel
-    x_adjust: torch.Tensor = input * contrast_factor
+    x_adjust: torch.Tensor = (1 - contrast_factor) * x_other + contrast_factor * input
 
     # Truncate between pixel values
     out: torch.Tensor = torch.clamp(x_adjust, 0.0, 1.0)
@@ -350,7 +356,7 @@ def adjust_brightness(input: torch.Tensor, brightness_factor: Union[float, torch
         brightness_factor = torch.unsqueeze(brightness_factor, dim=-1)
 
     # Apply brightness factor to each channel
-    x_adjust: torch.Tensor = input + brightness_factor
+    x_adjust: torch.Tensor = input * brightness_factor
 
     # Truncate between pixel values
     out: torch.Tensor = torch.clamp(x_adjust, 0.0, 1.0)

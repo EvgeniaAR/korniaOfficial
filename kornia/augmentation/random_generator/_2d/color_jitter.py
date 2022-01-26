@@ -59,13 +59,13 @@ class ColorJitterGenerator(RandomGeneratorBase):
 
     def make_samplers(self, device: torch.device, dtype: torch.dtype) -> None:
         brightness: torch.Tensor = _range_bound(
-            self.brightness, 'brightness', center=1.0, bounds=(0, 2), device=device, dtype=dtype
+            self.brightness, 'brightness', center=1.0, bounds=(0, float('inf')), device=device, dtype=dtype
         )
         contrast: torch.Tensor = _range_bound(self.contrast, 'contrast', center=1.0, device=device, dtype=dtype)
         saturation: torch.Tensor = _range_bound(self.saturation, 'saturation', center=1.0, device=device, dtype=dtype)
         hue: torch.Tensor = _range_bound(self.hue, 'hue', bounds=(-0.5, 0.5), device=device, dtype=dtype)
 
-        _joint_range_check(brightness, "brightness", (0, 2))
+        _joint_range_check(brightness, "brightness", (0, float('inf')))
         _joint_range_check(contrast, "contrast", (0, float('inf')))
         _joint_range_check(hue, "hue", (-0.5, 0.5))
         _joint_range_check(saturation, "saturation", (0, float('inf')))
