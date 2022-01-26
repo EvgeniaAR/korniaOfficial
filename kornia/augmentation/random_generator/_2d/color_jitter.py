@@ -140,7 +140,7 @@ def random_color_jitter_generator(
     hue = torch.as_tensor([0.0, 0.0] if hue is None else hue, device=device, dtype=dtype)
     saturation = torch.as_tensor([0.0, 0.0] if saturation is None else saturation, device=device, dtype=dtype)
 
-    _joint_range_check(brightness, "brightness", (0, 2))
+    _joint_range_check(brightness, "brightness", (0, float('inf')))
     _joint_range_check(contrast, "contrast", (0, float('inf')))
     _joint_range_check(hue, "hue", (-0.5, 0.5))
     _joint_range_check(saturation, "saturation", (0, float('inf')))
